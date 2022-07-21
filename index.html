@@ -42,7 +42,8 @@
 
             <div class="form-group">
                 <label for="password_confirmation" class="form-label">Nhập lại mật khẩu</label>
-                <input id="password_confirmation" name="password_confirmation" placeholder="Nhập lại mật khẩu" type="password" class="form-control">
+                <input id="password_confirmation" name="password_confirmation" placeholder="Nhập lại mật khẩu"
+                    type="password" class="form-control">
                 <span class="form-message"></span>
             </div>
 
@@ -57,7 +58,9 @@
             form: '#form-1',
             rules: [
                 Validator.isRequired('#fullname'),
-                Validator.isEmail('#email')
+                Validator.isEmail('#email'),
+                Validator.isRequired('#password'),
+                Validator.isLengthMin('#password', 6)
             ]
         })
     </script>
