@@ -1,5 +1,6 @@
 function Validator(value) {
     var formElement = document.querySelector('#form-1')
+    var selectRule = {}
 
     function validate(inputElement, rule) {
         var errorElement = inputElement.parentNode.querySelector('.form-message')
@@ -14,16 +15,21 @@ function Validator(value) {
     }
 
     if (formElement) {
-        value.rules.forEach(function (rule) {
+        value.rules.forEach(function(rule) {
             var inputElement = formElement.querySelector(rule.selector)
+            if (Array.isArray(selectRule[rule.selector])) {
+                selectRule[rule.selector].push(rule.test)
+            } else {
+                selectRule[rule.selector] = [rule.test]
+            }
 
             if (inputElement) {
                 // Xử lý event onblur
-                inputElement.onblur = function () {
-                    validate(inputElement, rule)
-                }
-                // Xử lý event oninput
-                inputElement.oninput = function () {
+                inputElement.onblur = function() {
+                        validate(inputElement, rule)
+                    }
+                    // Xử lý event oninput
+                inputElement.oninput = function() {
                     var errorElement = inputElement.parentNode.querySelector('.form-message')
                     errorElement.innerText = ''
                     errorElement.parentNode.classList.remove('invalid')
@@ -31,21 +37,23 @@ function Validator(value) {
             }
         })
     }
+    console.log(selectRule)
+
 }
-Validator.isRequired = function (selector) {
+Validator.isRequired = function(selector) {
     return {
         selector: selector,
-        test: function (value) {
+        test: function(value) {
             return value.trim() ? undefined : 'Vui lòng nhập đầy đủ thông tin'
         },
     }
 }
 
-Validator.isEmail = function (selector) {
+Validator.isEmail = function(selector) {
     // console.log(selector)
     return {
         selector: selector,
-        test: function (value) {
+        test: function(value) {
             var regex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
             return regex.test(value) ? undefined : 'Trường này là email'
 
@@ -54,10 +62,10 @@ Validator.isEmail = function (selector) {
 }
 
 
-Validator.isLengthMin = function (selector, min) {
+Validator.isLengthMin = function(selector, min) {
     return {
         selector: selector,
-        test: function (value) {
+        test: function(value) {
             console.log(value.trim().length)
             return value.trim().length >= min ? undefined : `Vui lòng nhập tối thiểu ${min} ký tự`
         }
